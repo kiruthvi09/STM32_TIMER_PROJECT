@@ -1,9 +1,15 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <Timer.h>
+#include "Timer.h"
+#include "uart.h"
+#include "Registers.h"
 
+#define RESET 0
+#define SET   1
 
 void GPIO_Init();
+
+
 
 
  volatile uint8_t IT_FLAG = 0;
@@ -16,29 +22,30 @@ void GPIO_Init();
 
  int main(){
 
-
-
+	 GPIO_Init();
+	 TIM2_Init();
+	 USART2_UART_Init();
+   SendDebugMessage("Hi");
 	 while(1){
 
-		 GPIO_Init();
-		 TIM2_Init();
-
-		 if(IT_FLAG){
+		 if(IT_FLAG == SET){
 			 IT_FLAG =0;
 			 GPIOC_ODR ^= (1<<13);
 		 }
 
-		 if(Motor_Flag){
+		 if(Motor_Flag == SET){
 			 Motor_Flag=0;
 
 			 togglecount++;
 			 if(togglecount == 1){
+				 SendDebugMessage("\nMotor Turned ON");
 				 GPIOC_ODR |=(1<<14);
 				 GPIOC_ODR &= ~(1<<15);
 
 			 }
 			 else
 			 {
+				 SendDebugMessage("\nMotor Turned OFF");
 				 GPIOC_ODR &=~(1<<14);
 				 GPIOC_ODR &= ~(1<<15);
 				 togglecount=0;
@@ -46,12 +53,12 @@ void GPIO_Init();
 
 		 }
 
-		 if(sensor_Flag){
+		 if(sensor_Flag == SET){
 			 sensor_Flag = 0;
-			  if(GPIOA_CRL & (1<<0)){
-				  printf("Detected Something");
+			  if((GPIOA_IDR & (1<<0)) == RESET){
+				  SendDebugMessage("hi");
 			  }
-			  else printf("Nothing Detected");
+			  else SendDebugMessage("bye");
 		 }
 
 	 }

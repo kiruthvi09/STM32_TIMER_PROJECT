@@ -1,4 +1,5 @@
 #include "Timer.h"
+#include "Registers.h"
  extern volatile uint8_t IT_FLAG ;
  extern volatile uint32_t count;
  extern volatile uint8_t togglecount;

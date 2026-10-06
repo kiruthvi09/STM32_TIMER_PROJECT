@@ -1,0 +1,2 @@
+../CUSTOM DRIVERS/Timer.c:11:6:TIM2_IRQHandler	4	static
+../CUSTOM DRIVERS/Timer.c:34:6:TIM2_Init	4	static
